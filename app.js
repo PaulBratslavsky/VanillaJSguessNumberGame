@@ -2,9 +2,11 @@ console.log('ready|set|javascript');
 
 // Game Values
 let      min = 1;
-let      max = 5;
-let   winNum = 5; // Create Rand Number
-let    turns = 3;
+let      max = 10;
+let   winNum = randomWinningNumber(min,max);
+let    turns = 5;
+
+console.log(winNum); 
 
 
 // UI Elements
@@ -26,7 +28,7 @@ guessBtn.addEventListener('click', playGame);
 
 
 // Show Players Initial Turn
-showMessage(`You have ${turns} turns left.`, 'green');
+showMessage(`You have ${turns} turns.`, 'green');
 
 
 // Play Game on Button Click
@@ -52,11 +54,12 @@ function gameLogic() {
 function checkTurnsLeft(guess) {
     if ( turns > 1 ) {
         turns--;
-        showMessage(`You have ${turns} turns left.`, 'green');
+        showMessage(`${guess} is not the right number. You have ${turns} turns left.`, 'red');
         resetInput(); 
 
         if ( winNum === guess) {
-            disableBtnAndInput();
+            disableInput();
+            playAgain();
             showMessage(`You Won`, 'blue');
 
 
@@ -64,7 +67,8 @@ function checkTurnsLeft(guess) {
 
     }  else {
         showMessage(`Game Over`, 'red');
-        disableBtnAndInput();
+        disableInput();
+        playAgain();
         resetInput(); 
     }
 }
@@ -80,11 +84,23 @@ function resetInput() {
 }
 
 function showMessage(text, color) {
-    message.innerHTML = `<h2>${text}</h2>`;
+    message.innerHTML = `<h5>${text}</h5>`;
     message.style.color = color;
 }
 
-function disableBtnAndInput() {
-    guessBtn.disabled = true;
+function disableInput() {
     guessInput.disabled = true;
+}
+
+function playAgain() {
+    guessBtn.value = 'Play Again';
+    guessBtn.classList.add('reset-game');
+
+    document.querySelector('.reset-game').addEventListener('mousedown', () => {
+        window.location.reload();
+    });
+}
+
+function randomWinningNumber(min,max) {
+    return Math.floor( Math.random()*(max-min+1)+min );
 }
